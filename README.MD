@@ -9,27 +9,31 @@
 ```json
 [
   {
-    "chatId": "some_chat_id", // уникальный идентификатор чата
     "event": {
       "id": 10,
       "name": "Event name",
       "iconsUUIDs": ["icon uuid1", "icon uuid2"]
     },
     "eventOwnerId": 14, // id владельца мероприятия
-    "isRequestSended": true, // является ли этот чат заявкой на мероприятие?
-    "messages": [
-      // массив новых сообщений чата
+    "chats": [
       {
-        "messageId": 10, // уникальный номер сообщения в чате (начинаются с 1)
-        "text": "Привет!",
-        "photos": ["uuid1", "uuid2"],
-        "date": "2025-03-01T13:51:53.285Z",
-        "fromUserId": 14,
-        "toUserId": 16
+        "chatId": "some_chat_id", // уникальный идентификатор чата
+        "isRequestSended": true, // является ли этот чат заявкой на мероприятие?
+        "messages": [
+          // массив новых сообщений чата
+          {
+            "messageId": 10, // уникальный номер сообщения в чате (начинаются с 1)
+            "text": "Привет!",
+            "photos": ["uuid1", "uuid2"],
+            "date": "2025-03-01T13:51:53.285Z",
+            "fromUserId": 14,
+            "toUserId": 16
+          }
+        ],
+        "myUnreadCount": 10,
+        "interlocutorUnreadCount": 20
       }
-    ],
-    "myUnreadCount": 10,
-    "interlocutorUnreadCount": 20
+    ]
   }
 ]
 ```
