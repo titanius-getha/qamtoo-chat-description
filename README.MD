@@ -21,8 +21,7 @@
     "chats": [
       {
         "chatId": "some_chat_id", // уникальный идентификатор чата
-        "isRequestSended": true, // является ли этот чат заявкой на мероприятие?
-        "isAccessGranted": false, // в случае если мероприятие заявка, выдан ли на нее доступ?
+        "requestStatus": ["NOT_SENDED", "AWAITING", "REJECTED", "ALLOWED"], // статус заявки, один из
         "user": {
           "id": 1,
           "name": "User 1",
