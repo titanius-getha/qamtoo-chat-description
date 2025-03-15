@@ -51,43 +51,41 @@
 Приходит при отправке нового сообщения в чат. Новое сообщение будет лежать в chats[0].messages[0]
 
 ```json
-[
-	{
-		"event": {
-			"id": 10,
-			"name": "Event name",
-			"iconsUUIDs": ["icon uuid1", "icon uuid2"],
-			"location": "ONLINE",
-			"dateFromS": 2514131321,
-			"dateToS": 1957817098
-		},
-		"eventOwnerId": 14, // id владельца мероприятия
-		"chats": [
-			{
-				"chatId": "some_chat_id", // уникальный идентификатор чата
-				"requestStatus": ["NOT_SENDED", "AWAITING", "REJECTED", "ALLOWED"], // статус заявки, один из
-				"user": {
-					"id": 1,
-					"name": "User 1",
-					"imageUUID": "uuid1"
-				},
-				"messages": [
-					// массив из одного элемента, который содержит новое сообщение
-					{
-						"messageId": 10, // уникальный номер сообщения в чате (начинаются с 1)
-						"text": "Привет!",
-						"photos": ["uuid1", "uuid2"],
-						"date": "2025-03-01T13:51:53.285Z",
-						"fromUserId": 14,
-						"toUserId": 16
-					}
-				],
-				"myUnreadCount": 10,
-				"interlocutorUnreadCount": 20
-			}
-		]
-	}
-]
+{
+	"event": {
+		"id": 10,
+		"name": "Event name",
+		"iconsUUIDs": ["icon uuid1", "icon uuid2"],
+		"location": "ONLINE",
+		"dateFromS": 2514131321,
+		"dateToS": 1957817098
+	},
+	"eventOwnerId": 14, // id владельца мероприятия
+	"chats": [
+		{
+			"chatId": "some_chat_id", // уникальный идентификатор чата
+			"requestStatus": ["NOT_SENDED", "AWAITING", "REJECTED", "ALLOWED"], // статус заявки, один из
+			"user": {
+				"id": 1,
+				"name": "User 1",
+				"imageUUID": "uuid1"
+			},
+			"messages": [
+				// массив из одного элемента, который содержит новое сообщение
+				{
+					"messageId": 10, // уникальный номер сообщения в чате (начинаются с 1)
+					"text": "Привет!",
+					"photos": ["uuid1", "uuid2"],
+					"date": "2025-03-01T13:51:53.285Z",
+					"fromUserId": 14,
+					"toUserId": 16
+				}
+			],
+			"myUnreadCount": 10,
+			"interlocutorUnreadCount": 20
+		}
+	]
+}
 ```
 
 ## События, которые вы отправляете серверу
