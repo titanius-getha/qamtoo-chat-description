@@ -97,6 +97,7 @@
                 "photos": [],
                 "fromUserId": 1,
                 "toUserId": 2,
+                "messageId": 10 // уникальный id сообщения в чате, начинается с 1
             },
         }
     }
