@@ -2,103 +2,101 @@
 
 ## События, которые сервер отправляет вам
 
-### initial_data
+### tab_data
 
-Приходит сразу после подключения. Содержит все данные чатов.
-
-```json
-[
-	{
-		"event": {
-			"id": 10,
-			"name": "Event name",
-			"iconsUUIDs": ["icon uuid1", "icon uuid2"],
-			"location": "ONLINE",
-			"dateFromS": 2514131321,
-			"dateToS": 1957817098
-		},
-		"eventOwnerId": 14, // id владельца мероприятия
-		"chats": [
-			{
-				"chatId": "some_chat_id", // уникальный идентификатор чата
-				"requestStatus": ["NOT_SENDED", "AWAITING", "REJECTED", "ALLOWED"], // статус заявки, один из
-				"user": {
-					"id": 1,
-					"name": "User 1",
-					"imageUUID": "uuid1"
-				},
-				"messages": [
-					// массив новых сообщений чата
-					{
-						"messageId": 10, // уникальный номер сообщения в чате (начинаются с 1)
-						"text": "Привет!",
-						"photos": ["uuid1", "uuid2"],
-						"date": "2025-03-01T13:51:53.285Z",
-						"fromUserId": 14,
-						"toUserId": 16
-					}
-				],
-				"myUnreadCount": 10,
-				"interlocutorUnreadCount": 20
-			}
-		]
-	}
-]
-```
-
-### new_message
-
-Приходит при отправке нового сообщения в чат. Новое сообщение будет лежать в chats[0].messages[0]
+Приходит после отправки ивента open_tab. Присылает комнаты и чаты для соответствующей страницы чатов (Основные или Заявки).
 
 ```json
 {
-	"event": {
-		"id": 10,
-		"name": "Event name",
-		"iconsUUIDs": ["icon uuid1", "icon uuid2"],
-		"location": "ONLINE",
-		"dateFromS": 2514131321,
-		"dateToS": 1957817098
-	},
-	"eventOwnerId": 14, // id владельца мероприятия
-	"chats": [
-		{
-			"chatId": "some_chat_id", // уникальный идентификатор чата
-			"requestStatus": ["NOT_SENDED", "AWAITING", "REJECTED", "ALLOWED"], // статус заявки, один из
-			"user": {
-				"id": 1,
-				"name": "User 1",
-				"imageUUID": "uuid1"
-			},
-			"messages": [
-				// массив из одного элемента, который содержит новое сообщение
-				{
-					"messageId": 10, // уникальный номер сообщения в чате (начинаются с 1)
-					"text": "Привет!",
-					"photos": ["uuid1", "uuid2"],
-					"date": "2025-03-01T13:51:53.285Z",
-					"fromUserId": 14,
-					"toUserId": 16
-				}
-			],
-			"myUnreadCount": 10,
-			"interlocutorUnreadCount": 20
-		}
-	]
+    "rooms": [ //массив всех комнат, в которые сгруппированы чаты
+        {
+            "roomId": "some_room_id",
+            "chatsIds": ["some_chat_id_1", "some_chat_id_1"], // chatId чатов в этой комнате
+            "event": { // данные привязанного мероприятия
+                "id": 10,
+                "name": "Event name",
+                "dateFromS": 10000,
+                "dateToS": 20000,
+                "iconsUUIDs": ["some_icon_uuid", "some_another_icon_uuid"],
+                "location": "OPEN_AIR" | "ONLINE",
+            },
+            "eventOwnerId": 10 //id пользователя - владельца мероприятия
+        }
+    ],
+    "chats": { // карта всех чатов
+        "some_chat_id_1": {
+            "chatId": "some_chat_id_1",
+            "roomId": "some_room_id",
+            "myUnreadCount": 10,
+            "interlocutorUnreadCount": 12,
+            "messages": [],
+            "requestStatus": "NOT_SENDED" | "AWAITING" | "REJECTED" | "ALLOWED",
+            "userId": 2, // id пользователя, который написал мероприятию
+            "userName": "Пользователь, отправивший заявку",
+            "userAvatarUUID": "some_image_uuid"
+        },
+        "some_chat_id_1": {
+            "chatId": "some_chat_id_2",
+            "roomId": "some_room_id",
+            "myUnreadCount": 5,
+            "interlocutorUnreadCount": 10,
+            "messages": [],
+            "requestStatus": "NOT_SENDED" | "AWAITING" | "REJECTED" | "ALLOWED",
+            "userId": 3, // id пользователя, который написал мероприятию
+            "userName": "Другой пользователь, отправивший заявку",
+            "userAvatarUUID": "some_another_image_uuid"
+        },
+    }
 }
 ```
 
-## События, которые вы отправляете серверу
+### updates
 
-### send_message
-
-Отправляет сообщение в чат. Вызывает событие _new_message_ у вас и у вашего собеседника.
+Присылает массив обновлений. Обновление - объект с полями _type_ и _value_. _type_ содержит тип обновления - `NEW_ROOM`, `NEW_CHAT`, `NEW_MESSAGE`. Обновления приходят в гарантированном порядке NEW_ROOM -> NEW_CHAT -> NEW_MESSAGE, таким образом при обработке массива сообщений, сначала будет создана комната, если требуется, затем будет создан чат, и только потом добавлено сообщение.
 
 ```json
-{
-	"chatId": "id чата",
-	"text": "Текст сообщения",
-	"photos": ["массив uuid картинок"],
-	"attachedPhotos": ["массив всех привязанных картинок"]
-}
+    {
+        "type": "NEW_ROOM",
+        "value": {
+            "roomId": "someNewRoomId",
+            "event": {
+                "id": 10,
+                "name": "some new event room",
+                "iconsUUIDs": ["uuid1", "uuid2"],
+                "dateFromS": 10000,
+                "dateToS": 20000,
+                "location": "OPEN_AIR" | "ONLINE",
+            },
+            "eventOwnerId": 1,
+            "chatsIds": [] // важно! Массив приходит пустым, потому что в дальнейшем придут событие на создание чата, и вы обновите этот массив в своем локальном стейте
+        },
+    },
+    {
+        "type": "NEW_CHAT",
+        "value": {
+            "roomId": "someNewRoomId",
+            "chatId": "someNewChatId",
+            "messages": [],
+            "myUnreadCount": 0,
+            "interlocutorUnreadCount": 0,
+            "requestStatus": "NOT_SENDED" | "AWAITING" | "REJECTED" | "ALLOWED",
+            "userId": 2,
+            "userName": "Имя пользователя",
+            "userAvatarUUID": "some_image_uuid"
+
+        }
+    },
+    {
+        "type": "NEW_MESSAGE",
+        "value": {
+            "chatId": "someNewChatId",
+            "message": {
+                "text": "some new message text",
+                "date": "some date",
+                "photos": [],
+                "fromUserId": 1,
+                "toUserId": 2,
+            },
+        }
+    },
 ```
