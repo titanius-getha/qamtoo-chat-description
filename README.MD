@@ -108,6 +108,39 @@
 ]
 ```
 
+### history
+
+Событие, которое приходит как только вы отправите серверу событие `load_history`. Присылает предыдущие 50 сообщений в чате.
+
+```json
+[
+	{
+		"text": "some new message text",
+		"date": "some date",
+		"photos": [],
+		"fromUserId": 1,
+		"toUserId": 2,
+		"messageId": 7
+	},
+	{
+		"text": "some new message text",
+		"date": "some date",
+		"photos": [],
+		"fromUserId": 1,
+		"toUserId": 2,
+		"messageId": 8
+	},
+	{
+		"text": "some new message text",
+		"date": "some date",
+		"photos": [],
+		"fromUserId": 1,
+		"toUserId": 2,
+		"messageId": 9
+	}
+]
+```
+
 ## События, которые вы отправляете серверу
 
 ### open
@@ -116,7 +149,7 @@
 
 ### send_message
 
-Отправляет сообщение в чат. Вызывает событие updates с типом NEW_MESSAGE у обоих участников чата
+Отправляет сообщение в чат. Вызывает событие `updates` с типом `NEW_MESSAGE` у обоих участников чата
 
 ```json
 {
@@ -124,5 +157,27 @@
 	"text": "Привет!",
 	"photos": [],
 	"attachedPhotos": []
+}
+```
+
+### read_message
+
+Отправьте, чтобы прочитать сообщение в чате. Вызывает событие `updates` с типом `UNREAD` у вас и вашего собеседника.
+
+```json
+{
+	"chatId": "some unique chat id",
+	"lastReadedMessageId": 12 // messageId последнего прочитанного вами сообщения
+}
+```
+
+### load_history
+
+Отправьте, чтобы загрузить историю чата. Вызывает событие `history`.
+
+```json
+{
+	"chatId": "some unique chat id",
+	"lastMessageId": 12 // id последнего загруженного сообщения в чате
 }
 ```
